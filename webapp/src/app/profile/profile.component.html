@@ -1,0 +1,25 @@
+<div class="profile-container" *ngIf="user">
+    <h2>User Profile</h2>
+    <div class="user-info">
+        <p><strong>ID:</strong> {{ user.id }}</p>
+        <p><strong>Username:</strong> {{ user.username }}</p>
+    </div>
+
+    <div class="image-section">
+        <div *ngIf="user.image; else noImage">
+            <img [src]="user.image" alt="Profile Image" class="profile-img">
+        </div>
+        <ng-template #noImage>
+            <div class="placeholder">No image uploaded</div>
+        </ng-template>
+    </div>
+
+    <div class="upload-section">
+        <h3>Upload Profile Picture</h3>
+        <input type="file" (change)="onFileSelected($event)" accept="image/*">
+        <button (click)="onUpload()" [disabled]="!selectedFile">Upload</button>
+        <p *ngIf="uploadMessage">{{ uploadMessage }}</p>
+    </div>
+
+    <button (click)="logout()" class="logout-btn">Logout</button>
+</div>
