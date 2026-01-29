@@ -32,7 +32,7 @@ export class LoginComponent {
                 next: (res) => {
                     if (res.success) {
                         localStorage.setItem('user', JSON.stringify(res.user));
-                        this.router.navigate(['/profile']);
+                        this.router.navigate(['/home']);
                     }
                 },
                 error: (err) => {

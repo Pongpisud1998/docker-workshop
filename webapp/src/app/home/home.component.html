@@ -1,0 +1,51 @@
+<div class="home-container">
+    <header class="header">
+        <div class="brand">Mapedia Workshop</div>
+        <div class="user-control">
+            <div class="profile-dropdown" (click)="showProfileModal = true">
+                <img [src]="userImage || 'assets/default-profile.png'" alt="Profile" class="header-profile-img">
+                <span class="username">{{ username }}</span>
+            </div>
+            <button class="logout-btn" (click)="logout()">Logout</button>
+        </div>
+    </header>
+
+    <app-profile-modal *ngIf="showProfileModal" [user]="currentUser"
+        (closeEvent)="showProfileModal = false"></app-profile-modal>
+
+    <div class="main-layout">
+        <aside class="sidebar">
+            <div class="upload-section">
+                <h3>Upload Raster</h3>
+                <p>Supported formats: .tif, .tiff</p>
+                <input type="file" id="rasterInput" (change)="onFileSelected($event)" accept=".tif,.tiff">
+                <button class="upload-btn" (click)="uploadRaster()" [disabled]="!selectedFile || uploading">
+                    {{ uploading ? 'Uploading...' : 'Upload' }}
+                </button>
+            </div>
+
+            <div class="layers-section">
+                <h3>Available Layers</h3>
+                <ul class="layer-list">
+                    <li *ngFor="let layer of layers" class="layer-item">
+                        <div class="layer-info">
+                            <input type="checkbox" [checked]="isLayerActive(layer.id)"
+                                [disabled]="isLayerLoading(layer.id)" (change)="toggleLayer(layer)">
+                            <span class="layer-name" [title]="layer.name">{{ layer.name }}</span>
+                        </div>
+                        <div class="layer-actions">
+                            <span *ngIf="isLayerLoading(layer.id)" class="loading-indicator">Loading...</span>
+                            <button class="delete-btn" (click)="deleteLayer(layer)"
+                                title="Delete Layer">&times;</button>
+                        </div>
+                    </li>
+                    <li *ngIf="layers.length === 0" class="no-layers">No layers found.</li>
+                </ul>
+            </div>
+        </aside>
+
+        <main class="map-wrapper">
+            <div id="map"></div>
+        </main>
+    </div>
+</div>

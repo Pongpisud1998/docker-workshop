@@ -1,13 +1,13 @@
 <div class="login-container">
-  <h2>Login</h2>
+  <h2>Welcome Back</h2>
   <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-    <div>
-      <label for="username">Username:</label>
-      <input id="username" type="text" formControlName="username">
+    <div class="form-group">
+      <label for="username">Username</label>
+      <input id="username" type="text" formControlName="username" placeholder="Enter your username">
     </div>
-    <div>
-      <label for="password">Password:</label>
-      <input id="password" type="password" formControlName="password">
+    <div class="form-group">
+      <label for="password">Password</label>
+      <input id="password" type="password" formControlName="password" placeholder="Enter your password">
     </div>
     <div *ngIf="error" class="error">{{ error }}</div>
     <button type="submit" [disabled]="!loginForm.valid">Login</button>

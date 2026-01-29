@@ -24,8 +24,32 @@
               "src/favicon.ico",
               "src/assets"
             ],
+            "allowedCommonJsDependencies": [
+              "leaflet",
+              "georaster",
+              "georaster-layer-for-leaflet",
+              "geowarp",
+              "geowarp-canvas",
+              "snap-bbox",
+              "georaster-stack",
+              "geo-extent",
+              "pixel-utils",
+              "bbox-fns",
+              "utm-utils",
+              "proj4",
+              "reproject-geojson",
+              "fast-min",
+              "fast-max",
+              "preciso",
+              "get-epsg-code",
+              "geography-markup-language",
+              "reproject-bbox",
+              "xdim",
+              "quick-scale"
+            ],
             "styles": [
-              "src/styles.css"
+              "src/styles.css",
+              "node_modules/leaflet/dist/leaflet.css"
             ],
             "scripts": []
           },
@@ -34,8 +58,8 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "500kb",
-                  "maximumError": "1mb"
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
                 },
                 {
                   "type": "anyComponentStyle",

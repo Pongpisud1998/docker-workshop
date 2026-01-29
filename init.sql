@@ -7,3 +7,9 @@ CREATE TABLE IF NOT EXISTS users (
 
 -- Optional: Seed a default user for testing
 INSERT INTO users (username, password, image) VALUES ('admin', 'admin123', NULL) ON CONFLICT (username) DO NOTHING;
+
+CREATE TABLE IF NOT EXISTS layer (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    path VARCHAR(255) NOT NULL
+);

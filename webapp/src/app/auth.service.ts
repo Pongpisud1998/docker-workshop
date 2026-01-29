@@ -6,16 +6,24 @@ import { Observable } from 'rxjs';
     providedIn: 'root'
 })
 export class AuthService {
-    // In a real app, use environment variables.
-    // For Docker setup: 
-    // Browser (Host) -> WebApp (Container) -> Browser -> API (localhost:3000)
-    // Since the browser runs the JS, it calls localhost:3000.
-    private apiUrl = 'http://localhost:3000';
+    // For Docker setup with Nginx reverse proxy:
+    // Browser -> /api/ -> Nginx -> NodeAPI
+    private apiUrl = '/api';
 
     constructor(private http: HttpClient) { }
 
     login(credentials: any): Observable<any> {
         return this.http.post(`${this.apiUrl}/login`, credentials);
+    }
+
+    logout(): void {
+        localStorage.removeItem('user');
+        // Redirect logic should be handled by component or router
+    }
+
+    getCurrentUser(): any {
+        const userStr = localStorage.getItem('user');
+        return userStr ? JSON.parse(userStr) : null;
     }
 
     uploadProfile(userId: number, file: File): Observable<any> {
