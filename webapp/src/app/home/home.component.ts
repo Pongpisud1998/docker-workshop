@@ -164,6 +164,104 @@ export class HomeComponent implements OnInit, AfterViewInit {
         }
     }
 
+    // GeoServer & PHP API Integration
+    geoServerLayer: L.TileLayer.WMS | undefined;
+    isGeoServerLayerActive = false;
+    phpTileLayer: L.TileLayer | undefined;
+    isPhpTileLayerActive = false;
+
+    testPhpApi(): void {
+        this.http.get('/php-api/').subscribe({
+            next: (data: any) => {
+                alert(`PHP API Response:\nStatus: ${data.status}\nMessage: ${data.message}\nDatabase: ${data.database}`);
+            },
+            error: (err) => {
+                console.error('PHP API Error', err);
+                alert('Failed to connect to PHP API');
+            }
+        });
+    }
+
+    togglePhpTileLayer(): void {
+        if (!this.map) return;
+
+        if (this.isPhpTileLayerActive) {
+            // Remove
+            if (this.phpTileLayer) {
+                this.map.removeLayer(this.phpTileLayer);
+            }
+            this.isPhpTileLayerActive = false;
+        } else {
+            // Add XYZ Layer from PHP
+            // /php-api/index.php?z={z}&x={x}&y={y}
+            this.phpTileLayer = L.tileLayer('/php-api/index.php?z={z}&x={x}&y={y}', {
+                maxZoom: 25,
+                attribution: '© PHP MBTiles'
+            });
+
+            this.phpTileLayer.addTo(this.map);
+            this.isPhpTileLayerActive = true;
+
+            // Fetch Bounds and Zoom
+            this.http.get<any>('/php-api/index.php?metadata=true').subscribe({
+                next: (data) => {
+                    if (data) {
+                        // 1. Set Min/Max Zoom if available
+                        if (this.phpTileLayer && data.minzoom !== undefined && data.maxzoom !== undefined) {
+                            // Direct options assignment as setMinZoom/setMaxZoom methods don't exist on TileLayer type
+                            (this.phpTileLayer as any).options.minZoom = data.minzoom;
+                            (this.phpTileLayer as any).options.maxZoom = data.maxzoom;
+                            console.log(`Updated Layer Zoom: Min=${data.minzoom}, Max=${data.maxzoom}`);
+                        }
+
+                        // 2. Fit Bounds
+                        if (data.bounds) {
+                            // Bounds format: "minLon,minLat,maxLon,maxLat"
+                            const parts = data.bounds.split(',').map((p: string) => parseFloat(p));
+                            if (parts.length === 4 && this.map) {
+                                // Leaflet bounds: [[minLat, minLon], [maxLat, maxLon]]
+                                const bounds: L.LatLngBoundsExpression = [
+                                    [parts[1], parts[0]], // SouthWest
+                                    [parts[3], parts[2]]  // NorthEast
+                                ];
+                                this.map.fitBounds(bounds);
+                                console.log('Fitted bounds to MBTiles:', bounds);
+                            }
+                        }
+                    }
+                },
+                error: (err) => {
+                    console.error('Failed to load MBTiles metadata:', err);
+                }
+            });
+        }
+    }
+
+    toggleGeoServerLayer(): void {
+        if (!this.map) return;
+
+        if (this.isGeoServerLayerActive) {
+            // Remove
+            if (this.geoServerLayer) {
+                this.map.removeLayer(this.geoServerLayer);
+            }
+            this.isGeoServerLayerActive = false;
+        } else {
+            // Add
+            // Using a default layer from GeoServer (e.g., ne:world) for demonstration
+            // Pointing to the Proxy: /geoserver/raster/wms
+            this.geoServerLayer = L.tileLayer.wms('/geoserver/raster/wms', {
+                layers: 'raster:S2B_MSIL1C_20181106_RGB',
+                format: 'image/png',
+                transparent: true,
+                attribution: '© GeoServer'
+            });
+
+            this.geoServerLayer.addTo(this.map);
+            this.isGeoServerLayerActive = true;
+        }
+    }
+
     deleteLayer(layer: any): void {
         if (!confirm(`Are you sure you want to delete "${layer.name}"?`)) return;
 

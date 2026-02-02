@@ -10,13 +10,18 @@ app.use(cors());
 app.use(bodyParser.json());
 
 // 1. Database Connection (PostgreSQL)
-const pool = new Pool({
-  host: process.env.DB_HOST || 'db',
-  user: process.env.DB_USER || 'myuser',
-  password: process.env.DB_PASS || 'mypassword',
-  database: process.env.DB_NAME || 'mydatabase',
-  port: 5432,
-});
+// 1. Database Connection (PostgreSQL)
+const poolConfig = process.env.DATABASE_URL
+  ? { connectionString: process.env.DATABASE_URL }
+  : {
+    host: process.env.DB_HOST || 'db',
+    user: process.env.DB_USER || 'myuser',
+    password: process.env.DB_PASS || 'mypassword',
+    database: process.env.DB_NAME || 'mydatabase',
+    port: 5432,
+  };
+
+const pool = new Pool(poolConfig);
 
 // 2. MinIO Connection
 const minioClient = new Minio.Client({

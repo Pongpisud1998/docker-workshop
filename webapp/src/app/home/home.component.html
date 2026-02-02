@@ -34,13 +34,28 @@
                             <span class="layer-name" [title]="layer.name">{{ layer.name }}</span>
                         </div>
                         <div class="layer-actions">
-                            <span *ngIf="isLayerLoading(layer.id)" class="loading-indicator">Loading...</span>
+                            <div *ngIf="isLayerLoading(layer.id)" class="loading-spinner"></div>
                             <button class="delete-btn" (click)="deleteLayer(layer)"
                                 title="Delete Layer">&times;</button>
                         </div>
                     </li>
                     <li *ngIf="layers.length === 0" class="no-layers">No layers found.</li>
                 </ul>
+
+            </div>
+
+            <div class="integration-section" style="margin-top: 20px; border-top: 1px solid #ccc; padding-top: 10px;">
+                <h3>Integration Tests</h3>
+                <button class="action-btn" (click)="testPhpApi()" style="width: 100%; margin-bottom: 5px;">Test PHP
+                    API</button>
+                <div class="layer-item">
+                    <input type="checkbox" [checked]="isGeoServerLayerActive" (change)="toggleGeoServerLayer()">
+                    <span class="layer-name">GeoServer (S2B_MSIL1C_20181106_RGB)</span>
+                </div>
+                <div class="layer-item">
+                    <input type="checkbox" [checked]="isPhpTileLayerActive" (change)="togglePhpTileLayer()">
+                    <span class="layer-name">PHP (ortho.mbtiles)</span>
+                </div>
             </div>
         </aside>
 
