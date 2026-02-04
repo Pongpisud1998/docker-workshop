@@ -65,7 +65,7 @@ MINIO_ENDPOINT=minio
 
 3.  **Dependencies**: Copy ไฟล์ package มาก่อน แล้ว install (เพื่อใช้ Docker Cache)
     `COPY package*.json ./`
-    `RUN npm ci`
+    `RUN npm install`
 
 4.  **Source Code**: Copy โค้ดที่เหลือทั้งหมด
     `COPY src ./src`
