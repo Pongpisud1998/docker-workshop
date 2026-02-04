@@ -66,42 +66,10 @@ services:
       - workshop-network
 
   # 5. GeoServer Service
-  geoserver:
-    image: kartoza/geoserver:2.24.0
-    container_name: workshop-geoserver
-    environment:
-      GEOSERVER_ADMIN_PASSWORD: ${GEOSERVER_ADMIN_PASSWORD}
-      GEOSERVER_ADMIN_USER: ${GEOSERVER_ADMIN_USER}
-      # CORS setup
-      GEOSERVER_CSRF_DISABLED: "true"
-      CORS_ENABLED: "true"
-      CORS_ALLOWED_ORIGINS: "*"
-      CORS_ALLOWED_METHODS: "GET,POST,PUT,DELETE,HEAD,OPTIONS"
-      CORS_ALLOWED_HEADERS: "*"
-      # Cache setup
-      GEOWEBCACHE_CACHE_DIR: /opt/geoserver/data_dir/gwc
-    volumes:
-      - ./geoserver-data:/opt/geoserver/data_dir
-      - ./geoserver-cache:/opt/geoserver/data_dir/gwc
-    depends_on:
-      - db
-    networks:
-      - workshop-network
+
 
   # 6. PHP API Service
-  phpapi:
-    build: ./phpapi
-    container_name: workshop-phpapi
-    environment:
-      DB_HOST: db
-      DB_PORT: 5432
-      DB_NAME: ${POSTGRES_DB}
-      DB_USER: ${POSTGRES_USER}
-      DB_PASS: ${POSTGRES_PASSWORD}
-    depends_on:
-      - db
-    networks:
-      - workshop-network
+
 
 volumes:
   db-data:
