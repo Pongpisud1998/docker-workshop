@@ -1,1 +1,4 @@
 /nodeapi/node_modules
+/geoserver-cache
+/geoserver-data
+*.mbtiles
